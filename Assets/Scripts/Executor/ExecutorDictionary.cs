@@ -17,12 +17,12 @@ namespace ScoreWarrior.Test
         
         private static class ExecutorStorage<T> where T : class, ICommand
         {
-            private static readonly ConditionalWeakTable<ExecutorDictionary, Executor<T>> Maps = new();
+            private static readonly ConditionalWeakTable<ExecutorDictionary, Executor> Maps = new();
 
             public static void Set(ExecutorDictionary map, IExecutor<T> value)
             {
                 Maps.Remove(map);
-                Maps.Add(map, new Executor<T>(value));
+                Maps.Add(map, new Executor(value));
             }
 
             public static bool TryGetValue(ExecutorDictionary map, out IExecutor<T> value)
@@ -37,12 +37,11 @@ namespace ScoreWarrior.Test
                 return false;
             }
             
-            private class Executor<TCommand>
-                where TCommand : class, ICommand
+            private class Executor
             {
-                public readonly IExecutor<TCommand> Value;
+                public readonly IExecutor<T> Value;
 
-                public Executor(IExecutor<TCommand> value)
+                public Executor(IExecutor<T> value)
                 {
                     Value = value;
                 }
